@@ -656,5 +656,15 @@ const products = [
       "apparel",
       "mens"
     ]
+  },
+  {
+    id:"i-am-a-fucking-monster",
+    image: "images/products/backpack.jpg",
+    name: "Big Dick Backpack - Cloudy",
+    rating: {
+      stars: 5,
+      count: 6969666
+    },
+    priceCents: 6900
   }
 ];

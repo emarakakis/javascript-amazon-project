@@ -1,5 +1,5 @@
 let productsHTML = '';
-
+let timeoutId = '';
 products.forEach(product => {
     productsHTML += `
         <div class="product-container">
@@ -41,7 +41,7 @@ products.forEach(product => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-text-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -60,7 +60,7 @@ document.querySelector('.js-products-grid')
 document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click', () => {
-            const productId = button.dataset.productId;
+            const { productId } = button.dataset;
             let matchingItem;
             cart.forEach((item) => {
                 if (productId === item.productId){
@@ -68,17 +68,14 @@ document.querySelectorAll('.js-add-to-cart')
                 }
             });
 
-            let addedQuantity = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value, 10);
-            console.log(addedQuantity);
+            let quantity = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value, 10);
+            console.log(quantity);
 
             if (matchingItem){
 
-                matchingItem.quantity += addedQuantity
+                matchingItem.quantity += quantity
             } else {
-                cart.push({
-                    productId: productId,
-                    quantity: addedQuantity
-                });
+                cart.push({productId,quantity});
 
 
             }
@@ -89,6 +86,15 @@ document.querySelectorAll('.js-add-to-cart')
 
             document.querySelector('.js-cart-quantity')
                 .innerHTML = cartQuantity;
+            document.querySelector(`.js-added-text-${productId}`)
+            .classList.add('green-add-to-do');
+            if(timeoutId){
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+                document.querySelector(`.js-added-text-${productId}`)
+                .classList.remove('green-add-to-do');
+            }, 2000);
     })
 
     
