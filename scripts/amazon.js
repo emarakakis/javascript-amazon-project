@@ -65,7 +65,7 @@ function updateCartQuantity(){
 
   document.querySelector('.js-cart-quantity')
       .innerHTML = cartQuantity;
-  document.querySelector(`.js-added-text-${productId}`)
+  /*document.querySelector(`.js-added-text-${productId}`)
   .classList.add('green-add-to-do');
   if(timeoutId){
       clearTimeout(timeoutId);
@@ -73,7 +73,7 @@ function updateCartQuantity(){
   timeoutId = setTimeout(() => {
       document.querySelector(`.js-added-text-${productId}`)
       .classList.remove('green-add-to-do');
-  }, 2000);
+  }, 2000);*/
 }
 
 document.querySelector('.js-products-grid')
