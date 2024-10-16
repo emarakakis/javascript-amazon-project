@@ -1,4 +1,4 @@
-import { cart  } from '../data/cart.js';
+import { cart, addToCart } from '../data/cart.js';
 import { products } from '../data/products.js';
 
 let productsHTML = '';
@@ -57,6 +57,25 @@ products.forEach(product => {
     `;
 })
 
+function updateCartQuantity(){
+  let cartQuantity = 0
+  cart.forEach((item) => {
+      cartQuantity += item.quantity;
+  })
+
+  document.querySelector('.js-cart-quantity')
+      .innerHTML = cartQuantity;
+  document.querySelector(`.js-added-text-${productId}`)
+  .classList.add('green-add-to-do');
+  if(timeoutId){
+      clearTimeout(timeoutId);
+  }
+  timeoutId = setTimeout(() => {
+      document.querySelector(`.js-added-text-${productId}`)
+      .classList.remove('green-add-to-do');
+  }, 2000);
+}
+
 document.querySelector('.js-products-grid')
     .innerHTML = productsHTML
 
@@ -64,42 +83,9 @@ document.querySelectorAll('.js-add-to-cart')
     .forEach((button) => {
         button.addEventListener('click', () => {
             const { productId } = button.dataset;
-            let matchingItem;
-            cart.forEach((item) => {
-                if (productId === item.productId){
-                    matchingItem = item;
-                }
-            });
 
-            let quantity = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value, 10);
-            console.log(quantity);
-
-            if (matchingItem){
-
-                matchingItem.quantity += quantity
-            } else {
-                cart.push({productId,quantity});
-
-
-            }
-            let cartQuantity = 0
-            cart.forEach((item) => {
-                cartQuantity += item.quantity;
-            })
-
-            document.querySelector('.js-cart-quantity')
-                .innerHTML = cartQuantity;
-            document.querySelector(`.js-added-text-${productId}`)
-            .classList.add('green-add-to-do');
-            if(timeoutId){
-                clearTimeout(timeoutId);
-            }
-            timeoutId = setTimeout(() => {
-                document.querySelector(`.js-added-text-${productId}`)
-                .classList.remove('green-add-to-do');
-            }, 2000);
-    })
-
-    
-})
+            addToCart(productId);
+            updateCartQuantity();
+    });
+});
 
