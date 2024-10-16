@@ -1,3 +1,5 @@
+import { cart  } from '../data/cart';
+
 let productsHTML = '';
 let timeoutId = '';
 products.forEach(product => {
