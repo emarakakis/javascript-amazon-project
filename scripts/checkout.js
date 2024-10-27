@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from '../data/cart.js';
+import { calculateCartQuantity, cart, changeFromCart, removeFromCart,  } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -14,6 +14,8 @@ cart.forEach( (cartItem) => {
             matchingProduct = product;
         }
     });
+
+checkoutNumber();
 
     cartSummaryHTML += `
     <div class="cart-item-container js-cart-container-${matchingProduct.id}">
@@ -36,9 +38,10 @@ cart.forEach( (cartItem) => {
                 <span>
                 Quantity: <span class="quantity-label">${cartItem.quantity}</span>
                 </span>
-                <span class="update-quantity-link link-primary">
+                <span class="update-quantity-link link-primary js-update-link" data-product-id=${matchingProduct.id}>
                 Update
                 </span>
+                <div class="js-update-input-element-${matchingProduct.id}"></div>
                 <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
                 Delete
                 </span>
@@ -104,6 +107,40 @@ document.querySelectorAll('.js-delete-link')
             removeFromCart(productId);
 
             const container = document.querySelector(`.js-cart-container-${productId}`);
+            checkoutNumber();
             container.remove();
         });
     });
+
+document.querySelectorAll('.js-update-link')
+    .forEach( (link) => {
+        const productId = link.dataset.productId;
+        link.addEventListener('click', () => {
+            quantityInput(productId);
+        })
+    })
+
+function checkoutNumber(){
+    document.querySelector('.js-checkout-number')
+        .innerHTML = `${calculateCartQuantity()} items`;
+}
+
+function quantityInput(productId){
+    document.querySelector(`.js-update-link`).addEventListener('click', () => {
+        // Create and inject the input and save button dynamically
+        document.querySelector(`.js-update-input-element-${productId}`).innerHTML = `
+            <input class="quantity-input js-quantity-input-${productId}">
+            <span class="save-quantity-link link-primary js-save-span-${productId}">Save</span>
+        `;
+    
+        // Now the element exists, you can safely add the event listener:
+        document.querySelector(`.js-save-span-${productId}`)
+            .addEventListener('click', (event) => {
+                const newQuantity = document.querySelector(`.js-quantity-input-${productId}`).value;
+                changeFromCart(productId, newQuantity);
+            });
+    });
+    
+
+}
+
